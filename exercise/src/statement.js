@@ -41,10 +41,7 @@ function getResultWithAmountAndCredits(result, format, totalAmount, volumeCredit
 function getThisAmount(play, thisAmount, perf) {
   switch (play.type) {
     case 'tragedy':
-      thisAmount = 40000;
-      if (perf.audience > 30) {
-        thisAmount += 1000 * (perf.audience - 30);
-      }
+      thisAmount = handleTragedy(thisAmount, perf);
       break;
     case 'comedy':
       thisAmount = 30000;
@@ -55,6 +52,14 @@ function getThisAmount(play, thisAmount, perf) {
       break;
     default:
       throw new Error(`unknown type: ${play.type}`);
+  }
+  return thisAmount;
+}
+
+function handleTragedy(thisAmount, perf) {
+  thisAmount = 40000;
+  if (perf.audience > 30) {
+    thisAmount += 1000 * (perf.audience - 30);
   }
   return thisAmount;
 }
