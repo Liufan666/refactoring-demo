@@ -44,15 +44,20 @@ function getThisAmount(play, thisAmount, perf) {
       thisAmount = handleTragedy(thisAmount, perf);
       break;
     case 'comedy':
-      thisAmount = 30000;
-      if (perf.audience > 20) {
-        thisAmount += 10000 + 500 * (perf.audience - 20);
-      }
-      thisAmount += 300 * perf.audience;
+      thisAmount = getThisAmountCaseComedy(thisAmount, perf);
       break;
     default:
       throw new Error(`unknown type: ${play.type}`);
   }
+  return thisAmount;
+}
+
+function getThisAmountCaseComedy(thisAmount, perf) {
+  thisAmount = 30000;
+  if (perf.audience > 20) {
+    thisAmount += 10000 + 500 * (perf.audience - 20);
+  }
+  thisAmount += 300 * perf.audience;
   return thisAmount;
 }
 
