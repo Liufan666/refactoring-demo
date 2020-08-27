@@ -2,11 +2,7 @@ function statement (invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = getResultWithCustomer(invoice);
-  const format = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format;
+  const format = getFormat();
   ({ volumeCredits, result, totalAmount } = getTotalAmountAndResultAndVolumeCredits(invoice, plays, volumeCredits, result, format, totalAmount));
   result = getResultWithAmountAndCredits(result, format, totalAmount, volumeCredits);
   return result;
@@ -15,6 +11,14 @@ function statement (invoice, plays) {
 module.exports = {
   statement,
 };
+function getFormat() {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  }).format;
+}
+
 function getResultWithCustomer(invoice) {
   return `Statement for ${invoice.customer}\n`;
 }
