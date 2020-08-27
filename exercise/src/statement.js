@@ -23,10 +23,15 @@ function getTotalAmountAndResultAndVolumeCredits(invoice, plays, volumeCredits, 
     // add volume credits
     volumeCredits = getVolumeCredits(volumeCredits, perf, play);
     //print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+    result = getResultWithPerf(result, play, format, thisAmount, perf);
     totalAmount += thisAmount;
   }
   return { volumeCredits, result, totalAmount };
+}
+
+function getResultWithPerf(result, play, format, thisAmount, perf) {
+  result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+  return result;
 }
 
 function getVolumeCredits(volumeCredits, perf, play) {
