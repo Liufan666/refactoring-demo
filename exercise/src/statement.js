@@ -19,14 +19,19 @@ function statement (invoice, plays) {
     result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
-  result += `You earned ${volumeCredits} credits \n`;
+  result = getResultWithAmountAndCredits(result, format, totalAmount, volumeCredits);
   return result;
 }
 
 module.exports = {
   statement,
 };
+function getResultWithAmountAndCredits(result, format, totalAmount, volumeCredits) {
+  result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  result += `You earned ${volumeCredits} credits \n`;
+  return result;
+}
+
 function getThisAmount(play, thisAmount, perf) {
   switch (play.type) {
     case 'tragedy':
