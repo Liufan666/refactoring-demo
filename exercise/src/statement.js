@@ -8,8 +8,18 @@ function statement (invoice, plays) {
   return result;
 }
 
+function printHtml (invoice, plays) {
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  let result = getResultWithCustomerHtml(invoice);
+  const format = getFormat();
+  ({ volumeCredits, result, totalAmount } = getTotalAmountAndResultAndVolumeCreditsHtml(invoice, plays, volumeCredits, result, format, totalAmount));
+  result = getResultWithAmountAndCreditsHtml(result, format, totalAmount, volumeCredits);
+  return result;
+}
+
 module.exports = {
-  statement,
+  statement,printHtml
 };
 function getFormat() {
   return new Intl.NumberFormat('en-US', {
@@ -19,8 +29,33 @@ function getFormat() {
   }).format;
 }
 
+function getResultWithCustomerHtml(invoice) {
+  return `<h1>Statement for ${invoice.customer}</h1>\n`;
+}
+
 function getResultWithCustomer(invoice) {
   return `Statement for ${invoice.customer}\n`;
+}
+
+function getTotalAmountAndResultAndVolumeCreditsHtml(invoice, plays, volumeCredits, result, format, totalAmount) {
+  result +=  '<table>\n' +'<tr><th>play</th><th>seats</th><th>cost</th></tr>';
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    let thisAmount = 0;
+    thisAmount = getThisAmount(play, thisAmount, perf);
+    // add volume credits
+    volumeCredits = getVolumeCredits(volumeCredits, perf, play);
+    //print line for this order
+    result = getResultWithPerfHtml(result, play, format, thisAmount, perf);
+    totalAmount += thisAmount;
+  }
+  result +=  '</table>\n';
+  return { volumeCredits, result, totalAmount };
+}
+
+function getResultWithPerfHtml(result, play, format, thisAmount, perf) {
+  result += ` <tr><td>${play.name}</td><td>${perf.audience}</td><td>${format(thisAmount / 100)}</td></tr>\n`;
+  return result;
 }
 
 function getTotalAmountAndResultAndVolumeCredits(invoice, plays, volumeCredits, result, format, totalAmount) {
@@ -48,6 +83,12 @@ function getVolumeCredits(volumeCredits, perf, play) {
   if ('comedy' === play.type)
     volumeCredits += Math.floor(perf.audience / 5);
   return volumeCredits;
+}
+
+function getResultWithAmountAndCreditsHtml(result, format, totalAmount, volumeCredits) {
+  result += `<p>Amount owed is <em>${format(totalAmount / 100)}</em></p>\n`;
+  result += `<p>You earned <em>${volumeCredits}</em> credits</p>\n`;
+  return result;
 }
 
 function getResultWithAmountAndCredits(result, format, totalAmount, volumeCredits) {
