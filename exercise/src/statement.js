@@ -21,15 +21,20 @@ function getTotalAmountAndResultAndVolumeCredits(invoice, plays, volumeCredits, 
     let thisAmount = 0;
     thisAmount = getThisAmount(play, thisAmount, perf);
     // add volume credits
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // add extra credit for every ten comedy attendees
-    if ('comedy' === play.type)
-      volumeCredits += Math.floor(perf.audience / 5);
+    volumeCredits = getVolumeCredits(volumeCredits, perf, play);
     //print line for this order
     result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
   return { volumeCredits, result, totalAmount };
+}
+
+function getVolumeCredits(volumeCredits, perf, play) {
+  volumeCredits += Math.max(perf.audience - 30, 0);
+  // add extra credit for every ten comedy attendees
+  if ('comedy' === play.type)
+    volumeCredits += Math.floor(perf.audience / 5);
+  return volumeCredits;
 }
 
 function getResultWithAmountAndCredits(result, format, totalAmount, volumeCredits) {
