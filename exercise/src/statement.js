@@ -1,7 +1,7 @@
 function statement (invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
-  let result = `Statement for ${invoice.customer}\n`;
+  let result = getResultWithCustomer(invoice);
   const format = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -15,6 +15,10 @@ function statement (invoice, plays) {
 module.exports = {
   statement,
 };
+function getResultWithCustomer(invoice) {
+  return `Statement for ${invoice.customer}\n`;
+}
+
 function getTotalAmountAndResultAndVolumeCredits(invoice, plays, volumeCredits, result, format, totalAmount) {
   for (let perf of invoice.performances) {
     const play = plays[perf.playID];
