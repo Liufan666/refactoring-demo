@@ -41,7 +41,7 @@ function getResultWithAmountAndCredits(result, format, totalAmount, volumeCredit
 function getThisAmount(play, thisAmount, perf) {
   switch (play.type) {
     case 'tragedy':
-      thisAmount = handleTragedy(thisAmount, perf);
+      thisAmount = getThisAmountCaseTragedy(thisAmount, perf);
       break;
     case 'comedy':
       thisAmount = getThisAmountCaseComedy(thisAmount, perf);
@@ -61,7 +61,7 @@ function getThisAmountCaseComedy(thisAmount, perf) {
   return thisAmount;
 }
 
-function handleTragedy(thisAmount, perf) {
+function getThisAmountCaseTragedy(thisAmount, perf) {
   thisAmount = 40000;
   if (perf.audience > 30) {
     thisAmount += 1000 * (perf.audience - 30);
